@@ -1,4 +1,4 @@
-from Projeto_FinalCurso.funcoesProjeto import *
+from funcoesProjeto import *
 from os import listdir, system
 
 while True:
