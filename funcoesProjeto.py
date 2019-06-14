@@ -111,16 +111,16 @@ def estaticasdaturma():
     return media, qtdacimamedia, qtdaprovados, qtdreprovados, qtdrecuperacao, qtdreprovfaltas
 
 
-def gerarturma(nome):
-    arquivo = open(nome + ".txt", 'w', encoding="UTF-8")
-    for x in range(1, 61):
+def gerarturma(nome, qtd=1):
+    arquivo = open(nome + str(qtd) + "alunos.txt", 'w', encoding="UTF-8")
+    for x in range(1, qtd+1):
         aluno = ("Aluno " + str(x)).title()
         n1 = round(random() * 10, 2)
         n2 = round(random() * 10, 2)
         faltas = randint(1, 15)
         arquivo.write(f"{aluno}|{n1}|{n2}|{faltas}\n")
     arquivo.close()
-    print(f"Criado o arquivo {nome}.txt")
+    print(f"Criado o arquivo {arquivo.name}")
 
 
 # analisarturma("teste", 'html', 'base1.txt')

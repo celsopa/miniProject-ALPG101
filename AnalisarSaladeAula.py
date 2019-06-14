@@ -15,7 +15,12 @@ while True:
             nome = input("Informe o nome do arquivo a ser criado: ").strip()
             while nome == "":
                 nome = input("Informe o nome do arquivo a ser criado: ").strip()
-            gerarturma(nome)
+            try:
+                qtd = int(input("Quantos alunos deseja criar? "))
+            except:
+                print("[ERRO] Quantidade inválida. Tente novamente.")
+                continue
+            gerarturma(nome, qtd)
 
         # COMANDO EXIBIR ARQUIVOS .TXT
         elif acao == 2:
@@ -61,7 +66,7 @@ while True:
                         formato_saida = 'html'
                         break
                     else:
-                        print("Formato inválido.")
+                        print("[ERRO] Formato inválido. Tente novamente.")
                 except:
                     print("Formato inválido.")
                     continue
@@ -73,6 +78,7 @@ while True:
             system("PAUSE")
             break
         else:
-            print("Ação inválida.")
+            print("[ERRO] OPÇÃO INVÁLIDA.")
     except:
+        print("[ERRO] OPÇÃO INVÁLIDA.")
         continue
