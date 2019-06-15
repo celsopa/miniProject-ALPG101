@@ -4,10 +4,10 @@ from os import listdir, system
 while True:
     try:
         print(f"""O que deseja fazer?
-        [ 1 ] Gerar informações da turma.
-        [ 2 ] Exibir arquivos disponíveis.
-        [ 3 ] Analisar arquivo da turma.
-        [ 4 ] SAIR""")
+[ 1 ] Gerar informações da turma.
+[ 2 ] Exibir arquivos disponíveis.
+[ 3 ] Analisar arquivo da turma.
+[ 4 ] SAIR""")
         acao = int(input())
 
         # COMANDO GERAR BASE DE DADOS
@@ -51,14 +51,13 @@ while True:
                 except:
                     print("Arquivo não localizado.")
 
-            arquivo_saida = input(
-                "Informe o nome do arquivo onde serão salvas as informações [sem formato]: ").strip().lower()
+            arquivo_saida = input("Informe o nome do arquivo onde serão salvas as informações [sem formato]: ").strip().lower()
             while True:
                 try:
                     print("""Informe o formato do arquivo que deverá ser criado:
-                    [ 1 ] Formato [.txt]
-                    [ 2 ] Formato [.html]""")
-                    formato_saida = int(input())
+[ 1 ] Formato [.txt]
+[ 2 ] Formato [.html]""")
+                    formato_saida = int(input().strip())
                     if formato_saida == 1:
                         formato_saida = 'txt'
                         break

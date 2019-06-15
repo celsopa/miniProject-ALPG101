@@ -7,6 +7,7 @@ situacaoTurma = []
 def analisarturma(novo_arquivo, formato, base_dados):
     """
     Analisa um arquivo com dados dos alunos de uma classe e retorna uma tabela com a situação de cada um.
+    Alimenta as listas [notasTurma] e [situacaoTurma], usados pela função [estaticasdaturma].
     :param novo_arquivo: Nome do novo arquivo onde serão salvas as informações da turma.
     :param formato: Formato do arquivo que será criado.
     :param base_dados: Nome do arquivo com indicação do formato onde constam os dados que serão analisados.
@@ -40,52 +41,118 @@ def analisarturma(novo_arquivo, formato, base_dados):
     if formato == "html":
         htmlinicio(arquivo)
         arquivo.writelines(conteudo)
-        htmlfim(arquivo)
-        arquivo.write(f"""<p>Média da turma: {estaticaturma[0]}</br>
-        Quantidade de Alunos acima da média: {estaticaturma[1]}</br>
-        Quantidade de alunos aprovados: {estaticaturma[2]}</br>
-        Quantidade de alunos reprovados: {estaticaturma[3]}</br>
-        Quantidade de alunos em recuperação: {estaticaturma[4]}</br>
-        Quantidade de alunos reprovados por falta: {estaticaturma[5]}</br></p>""")
+        arquivo.write(f"""</table>
+        </div>
+        <div id="resumo">
+        <h3>Resumo da Turma</h3>
+        <p>Média da turma: {estaticaturma[0]}</p>
+        <p>Quantidade de alunos acima da média: {estaticaturma[1]}</p>
+        <p>Quantidade de alunos aprovados: {estaticaturma[2]}</p>
+        <p>Quantidade de alunos reprovados: {estaticaturma[3]}</p>
+        <p>Quantidade de alunos em recuperação: {estaticaturma[4]}</p>
+        <p>Quantidade de alunos reprovados por falta: {estaticaturma[5]}</p>
+        </div>
+        </div>
+        </body>
+        </html>""")
     else:
         arquivo.write(f"""{'NOME':^30}|{'NOTA 1':^10}|{'NOTA 2':^10}|{'FALTAS':^10}|{'MÉDIA':^10}|{'SITUAÇÃO':^10}\n""")
         arquivo.writelines(conteudo)
         arquivo.write(f"""\nMédia da turma: {estaticaturma[0]}
-        Quantidade de Alunos acima da média: {estaticaturma[1]}
+        Quantidade de alunos acima da média: {estaticaturma[1]}
         Quantidade de alunos aprovados: {estaticaturma[2]}
         Quantidade de alunos reprovados: {estaticaturma[3]}
         Quantidade de alunos em recuperação: {estaticaturma[4]}
         Quantidade de alunos reprovados por falta: {estaticaturma[5]}""")
     arquivo.close()
-    print(f"Criado o arquivo {novo_arquivo}.")
+    print(f"Criado o arquivo [{novo_arquivo}]")
 
 
 def htmlinicio(arquivo):
+    """
+    Escreve a estrutura html inicial ao arquivo informado.
+    :param arquivo: Um arquivo já aberto.
+    :return: No return.
+    """
     arquivo.write(f"""<!DOCTYPE html>
         <html lang="pt-br">
           <head>
             <title>Notas da Turma</title>
             <meta charset="utf-8">
+            <style>
+                body{{
+                    width: auto;
+                    height: auto;
+                    background: #bee5f4;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: center;
+                    align-items: center;
+                }}
+                h1{{
+                    font-size: 30pt;
+                    text-align: center;
+                }}
+                #conteudo{{
+                    background-color: #e9f6fb;
+                    margin: 20px auto;
+                    padding: 20px;
+                    width: auto;
+                    height: auto;
+                    border-radius: 10px;
+                }}
+    			#tabela{{
+                    position: relative;
+                    float:left;
+                    width: auto;
+                    text-aligne: center;
+                    margin-right: 10px;
+                }}
+                #tabela th{{
+                    font-size: 16pt;
+                }}
+                #tabela td{{
+                    text-align: center;
+                    padding: 2px 10px;
+                }}
+                #resumo{{
+                    position: relative;
+                    font-size: 14pt;
+                    float:left;
+                    width: auto;
+                    margin-left: 10px;
+                    padding: 10px;
+                    border-radius: 10px;
+                }}
+                #resumo h3{{
+                    text-align: center;
+                }}
+            </style>
           </head>
           <body>
-            <table border="1">
-            <tr>
-            <th>NOME</th>
-            <th>NOTA 01</th>
-            <th>NOTA 02</th>
-            <th>FALTAS</th>
-            <th>MÉDIA</th>
-            <th>SITUAÇÃO</th>
-            </tr>""")
+            <div id="conteudo">
+            <h1>Análise da Classe</h1>
+            <div id="tabela">
+                <table border="1">
+                <tr>
+                <th>NOME</th>
+                <th>NOTA 01</th>
+                <th>NOTA 02</th>
+                <th>FALTAS</th>
+                <th>MÉDIA</th>
+                <th>SITUAÇÃO</th>
+                </tr>""")
 
 
-def htmlfim(arquivo):
-    arquivo.write("""</table>
-        </body>
-        </html>""")
-
-
-def situacaoaluno(nota1=0.0, nota2=0.0, faltas=0):
+def situacaoaluno(nota1, nota2, faltas):
+    """
+    Recebe como parâmetro duas notas (números reais) e a quantidade de faltas (número inteiro).
+    Analisa os valores recebidos e retorna a média do aluno e sua situação.
+    :param nota1: Número real correspondente à nota 1 do aluno.
+    :param nota2: Número real correspondente à nota 2 do aluno.
+    :param faltas: Númro inteiro correspondente à quantidade de faltas do aluno.
+    :return: Um par formado pelas variaveis [media] e [situacao].
+    """
     media = round((nota1 + nota2)/2, 2)
     if media < 5:
         situacao = "Reprovado"
@@ -99,6 +166,12 @@ def situacaoaluno(nota1=0.0, nota2=0.0, faltas=0):
 
 
 def estaticasdaturma():
+    """
+    Analisa a situação geral da turma. Calculando a média geral, quantidade de alunos acima da média
+    e a quantidade de alunos em cada situação.
+    :return: 06 variáveis correspondentes a média da classe, quantidade de alunos acima da média,
+    quantidade de alunos aprovados, reprovados, em recuperação e reprovados por falta.
+    """
     media = round(sum(notasTurma) / len(notasTurma), 2)
     qtdacimamedia = 0
     for n in notasTurma:
@@ -112,7 +185,15 @@ def estaticasdaturma():
 
 
 def gerarturma(nome, qtd=1):
-    arquivo = open(nome + str(qtd) + "alunos.txt", 'w', encoding="UTF-8")
+    """
+    Cria um arquivo [.TXT] que servirá de base de dados representando uma classe de aula.
+    Contém uma quantidade definida de alunos com elementos atribuídos aleatoriamente.
+    Ao final exibe o nome do arquivo criado.
+    :param nome: [String] Nome do arquivo de texto a ser criado.
+    :param qtd: [Númeor inteiro] Quantidade de alunos a serem criados.
+    :return: No return.
+    """
+    arquivo = open(nome + "_" + str(qtd) + "alunos.txt", 'w', encoding="UTF-8")
     for x in range(1, qtd+1):
         aluno = ("Aluno " + str(x)).title()
         n1 = round(random() * 10, 2)
@@ -121,6 +202,3 @@ def gerarturma(nome, qtd=1):
         arquivo.write(f"{aluno}|{n1}|{n2}|{faltas}\n")
     arquivo.close()
     print(f"Criado o arquivo {arquivo.name}")
-
-
-# analisarturma("teste", 'html', 'base1.txt')
