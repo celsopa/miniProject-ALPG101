@@ -74,7 +74,7 @@ while True:
             print(f'Arquivos disponíveis: {arquivos_txt}')
             arquivo_entrada = input("Informe o arquivo a ser alterado [com formato]: ").strip().lower()
         aluno = input("Informe o nome do aluno que deseja alteração: ").strip()
-        print("""Informe o atributo que que deverá ser alterado:
+        print("""Informe o atributo que deverá ser alterado:
 [ 1 ] Nome do aluno
 [ 2 ] Nota 01
 [ 3 ] Nota 02
