@@ -2,7 +2,6 @@ from random import random, randint
 from os import listdir
 import re
 
-
 notasTurma = []
 situacaoTurma = []
 
@@ -55,20 +54,35 @@ def analisarturma(formato, base_dados):
     if formato == "html":
         htmlinicio(arquivo)
         arquivo.writelines(conteudo)
-        arquivo.write(f"""</table>
+        arquivo.write(f"""
+            </table>
         </div>
         <div id="resumo">
-        <h3>Resumo da Turma</h3>
-        <p>Média da turma: {estaticaturma[0]}</p>
-        <p>Alunos acima da média: {estaticaturma[1]}</p>
-        <p>Alunos aprovados: {estaticaturma[2]}</p>
-        <p>Alunos reprovados: {estaticaturma[3]}</p>
-        <p>Alunos em recuperação: {estaticaturma[4]}</p>
-        <p>Alunos reprovados por falta: {estaticaturma[5]}</p>
+            <h3>Resumo da Turma</h3>
+            <p>Média da turma: {estaticaturma[0]}</p>
+            <p>Alunos acima da média: {estaticaturma[1]}</p>
+            <p>Alunos aprovados: {estaticaturma[2]}</p>
+            <p>Alunos reprovados: {estaticaturma[3]}</p>
+            <p>Alunos em recuperação: {estaticaturma[4]}</p>
+            <p>Alunos reprovados por falta: {estaticaturma[5]}</p>
         </div>
-        </div>
-        </body>
-        </html>""")
+    </div>
+    <script>
+        linha = document.getElementsByTagName('tr')
+        for (var x = 1; x < linha.length; x++){{
+            if (linha[x].innerHTML.indexOf('<td>Aprovado</td>') == -1){{
+                linha[x].style.backgroundColor = '#ff6666';
+            }}
+            if (linha[x].innerHTML.indexOf('<td>Recuperação</td>') != -1){{
+                linha[x].style.backgroundColor = '#ffe6e6';
+            }}
+            if (linha[x].innerHTML.indexOf('<td>Aprovado</td>') != -1){{
+                linha[x].style.backgroundColor = 'rgba(0, 4, 255, 0.2)';
+            }}
+        }}
+    </script>
+    </body>
+</html>""")
     else:
         arquivo.write(f"""{'NOME':^30}|{'NOTA 1':^10}|{'NOTA 2':^10}|{'FALTAS':^10}|{'MÉDIA':^10}|{'SITUAÇÃO':^20}\n""")
         arquivo.writelines(conteudo)
@@ -98,7 +112,7 @@ def htmlinicio(arquivo):
                 body{{
                     width: auto;
                     height: auto;
-                    background: #bee5f4;
+                    background-color: lightblue;
                     display: flex;
                     flex-direction: row;
                     justify-content: center;
@@ -109,7 +123,7 @@ def htmlinicio(arquivo):
                     text-align: center;
                 }}
                 #conteudo{{
-                    background-color: #e9f6fb;
+                    background-color: rgba(0, 4, 255, 0.15);
                     margin: 20px auto;
                     padding: 20px;
                     width: auto;
@@ -120,7 +134,7 @@ def htmlinicio(arquivo):
                     position: relative;
                     float:left;
                     width: auto;
-                    text-aligne: center;
+                    text-align: center;
                     margin-right: 10px;
                 }}
                 #tabela th{{
@@ -168,7 +182,7 @@ def situacaoaluno(nota1, nota2, faltas):
     :param faltas: Número inteiro correspondente à quantidade de faltas do aluno.
     :return: Um par formado pelas variáveis [media] e [situacao].
     """
-    media = round((nota1 + nota2)/2, 2)
+    media = round((nota1 + nota2) / 2, 2)
     if faltas >= 10:
         situacao = "Reprovado por falta"
     elif media < 5:
@@ -210,7 +224,7 @@ def gerarturma(nome, qtd=1):
     :return: [No return].
     """
     arquivo = open(nome + ".txt", 'w', encoding="UTF-8")
-    for x in range(1, qtd+1):
+    for x in range(1, qtd + 1):
         aluno = ("Aluno_" + str(x)).title()
         n1 = round(random() * 10, 2)
         n2 = round(random() * 10, 2)
@@ -235,59 +249,59 @@ def alterarbasedados(base_dados, aluno, dado):
     conteudo = []
     achou = 0
     for linha in arquivo:
-        buscaAluno = linha.split('|')[0]
-        if buscaAluno.strip().lower() == aluno.strip().lower():
+        buscaaluno = linha.split('|')[0]
+        if buscaaluno.strip().lower() == aluno.strip().lower():
             achou = 1
 
             # ALTERA O NOME DO ALUNO
             if dado == "nome":
                 dado = r"\b{}\b".format(linha.split('|')[0])
-                dadoVelho = linha.split("|")[0]
-                dadoNovo = input(f'Novo NOME de {linha.split("|")[0]}: ').strip().title()
-                linha = re.sub(dado, str(dadoNovo), linha)
-                print(f'Nome de {dadoVelho} alterada para {dadoNovo}')
+                dadovelho = linha.split("|")[0]
+                dadonovo = input(f'Novo NOME de {linha.split("|")[0]}: ').strip().title()
+                linha = re.sub(dado, str(dadonovo), linha)
+                print(f'Nome de {dadovelho} alterada para {dadonovo}')
                 conteudo.append(linha)
 
             # ALTERA A NOTA 01
             elif dado == "n1":
                 dado = r"\b{}\b".format(linha.split('|')[1])
-                dadoVelho = linha.split('|')[1]
+                dadovelho = linha.split('|')[1]
                 while True:
                     try:
-                        dadoNovo = float(input(f'Nova NOTA 01 de {linha.split("|")[0]}: ').strip())
+                        dadonovo = float(input(f'Nova NOTA 01 de {linha.split("|")[0]}: ').strip())
                         break
                     except:
                         print("[ERRO] Formato inválido.")
-                linha = re.sub(dado, str(dadoNovo), linha)
-                print(f'Nota 01 do aluno {linha.split("|")[0]} alterada de {dadoVelho} para {dadoNovo}')
+                linha = re.sub(dado, str(dadonovo), linha)
+                print(f'Nota 01 do aluno {linha.split("|")[0]} alterada de {dadovelho} para {dadonovo}')
                 conteudo.append(linha)
 
             # ALTERA A NOTA 02
             elif dado == "n2":
                 dado = r"\b{}\b".format(linha.split('|')[2])
-                dadoVelho = linha.split('|')[2]
+                dadovelho = linha.split('|')[2]
                 while True:
                     try:
-                        dadoNovo = float(input(f'Nova NOTA 02 de {linha.split("|")[0]}: ').strip())
+                        dadonovo = float(input(f'Nova NOTA 02 de {linha.split("|")[0]}: ').strip())
                         break
                     except:
                         print("[ERRO] Formato inválido.")
-                linha = re.sub(dado, str(dadoNovo), linha)
-                print(f'Nota 02 do aluno {linha.split("|")[0]} alterada de {dadoVelho} para {dadoNovo}')
+                linha = re.sub(dado, str(dadonovo), linha)
+                print(f'Nota 02 do aluno {linha.split("|")[0]} alterada de {dadovelho} para {dadonovo}')
                 conteudo.append(linha)
 
             # ALTERA A QTD DE FALTAS
             elif dado == "faltas":
                 dado = r"\b{}\b".format(linha.split('|')[3])
-                dadoVelho = linha.split('|')[3]
+                dadovelho = linha.split('|')[3]
                 while True:
                     try:
-                        dadoNovo = int(input(f'Nova quantidade de faltas de {linha.split("|")[0]}: ').strip())
+                        dadonovo = int(input(f'Nova quantidade de faltas de {linha.split("|")[0]}: ').strip())
                         break
                     except:
                         print("[ERRO] Formato inválido.")
-                linha = re.sub(dado, str(dadoNovo), linha)
-                print(f'Faltas do aluno {linha.split("|")[0]} alterada de {dadoVelho} para {dadoNovo}')
+                linha = re.sub(dado, str(dadonovo), linha)
+                print(f'Faltas do aluno {linha.split("|")[0]} alterada de {dadovelho} para {dadonovo}')
                 conteudo.append(linha)
         else:
             conteudo.append(linha)

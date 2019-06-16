@@ -2,7 +2,10 @@
 __pycache__/
 venv
 venv/
+dist
+build
 usingFlask
 usingFlask/
 *.txt
 *.html
+*.spec
