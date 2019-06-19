@@ -1,7 +1,9 @@
 # miniProject-ALPG101
 ####A little classroom analyzer. 
-####Mini project for the discipline Algorithm and Programming Logic. ###
+####Mini project for the discipline Algorithm and Programming Logic. ####
 
+
+####VERSION 01####
 ######Main file: classRoomAnalyzer.py
 
 The application offers a MENU with 5 (five) options:  
