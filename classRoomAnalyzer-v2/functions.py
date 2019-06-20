@@ -14,6 +14,23 @@ class Aluno:
         self.n2 = float(n2)
         self.faltas = int(faltas)
 
+
+# Verifica se o diretório "./database" existe, caso contrário, cria esse diretório.
+def checkdatabasedir():
+    try:
+        database = os.listdir("./database")
+    except FileNotFoundError:
+        os.makedirs("./database")
+
+
+# Verifica se o diretório "./analises" existe, caso contrário, cria esse diretório.
+def checkanalisesdir():
+    try:
+        database = os.listdir("./analises")
+    except FileNotFoundError:
+        os.makedirs("./analises")
+
+
 # Verifica se o número informado pode ser convertido para ponto flutuante
 def isfloat(n):
     try:
@@ -26,6 +43,7 @@ def isfloat(n):
 # Retorna um dicionário com os arquivos da pasta 'database'
 def listardb():
     arquivosdb = {}
+    checkdatabasedir()
     files = os.listdir("./database")
     for f in range(len(files)):
         arquivosdb[f+1] = files[f]
@@ -112,106 +130,108 @@ def criaraluno():
 def alterarbasedados():
     exibirdb()
     listasdb = listardb()
-    db = input("Informe a database que deseja alterar: ")
-    while (not db.isnumeric()) or (int(db) <= 0) or (int(db) > len(listasdb)):
-        print("[ERRO] ENTRADA INVÁLIDA.")
+    if len(listasdb) != 0:
         db = input("Informe a database que deseja alterar: ")
-    db = int(db)
-    db = listasdb[db]
-    print("=" * 40)
-    print(f"{'ALTERANDO DATABASE':^40}")
-    print("=" * 40)
-    arquivo = open("./database/" + db, "r", encoding="UTF-8")
-    aluno = input("Informe o nome do aluno que deseja editar: ").strip()
-    print(f"""Informe o dado que deseja alterar:
-[ 1 ] Nome
-[ 2 ] Nota 01
-[ 3 ] Nome 02
-[ 4 ] Faltas""")
-    dado = input("Informe o dado que deseja alterar: ")
-    while dado not in ["1", "2", "3", "4"]:
-        print("[ERRO] ENTRADA INVÁLIDA")
+        while (not db.isnumeric()) or (int(db) <= 0) or (int(db) > len(listasdb)):
+            print("[ERRO] ENTRADA INVÁLIDA.")
+            db = input("Informe a database que deseja alterar: ")
+        db = int(db)
+        db = listasdb[db]
+        print("=" * 40)
+        print(f"{'ALTERANDO DATABASE':^40}")
+        print("=" * 40)
+        arquivo = open("./database/" + db, "r", encoding="UTF-8")
+        aluno = input("Informe o nome do aluno que deseja editar: ").strip()
+        print(f"""Informe o dado que deseja alterar:
+    [ 1 ] Nome
+    [ 2 ] Nota 01
+    [ 3 ] Nome 02
+    [ 4 ] Faltas""")
         dado = input("Informe o dado que deseja alterar: ")
-    if dado == "1":
-        dado = 'nome'
-    elif dado == "2":
-        dado = 'n1'
-    elif dado == "3":
-        dado = 'n2'
-    elif dado == "4":
-        dado = 'faltas'
-    conteudo = []
-    achou = 0
-    for linha in arquivo:
-        buscaaluno = linha.split('|')[0]
-        if buscaaluno.strip().lower() == aluno.strip().lower():
-            achou = 1
+        while dado not in ["1", "2", "3", "4"]:
+            print("[ERRO] ENTRADA INVÁLIDA")
+            dado = input("Informe o dado que deseja alterar: ")
+        if dado == "1":
+            dado = 'nome'
+        elif dado == "2":
+            dado = 'n1'
+        elif dado == "3":
+            dado = 'n2'
+        elif dado == "4":
+            dado = 'faltas'
+        conteudo = []
+        achou = 0
+        for linha in arquivo:
+            buscaaluno = linha.split('|')[0]
+            if buscaaluno.strip().lower() == aluno.strip().lower():
+                achou = 1
 
-            # ALTERA O NOME DO ALUNO
-            if dado == "nome":
-                dado = r"\b{}\b".format(linha.split('|')[0])
-                dadovelho = linha.split("|")[0]
-                dadonovo = input(f'Novo NOME de {linha.split("|")[0]}: ').strip().title()
-                linha = re.sub(dado, str(dadonovo), linha)
-                print(f'Nome de [{dadovelho}] alterada para [{dadonovo}]')
-                conteudo.append(linha)
+                # ALTERA O NOME DO ALUNO
+                if dado == "nome":
+                    dado = r"\b{}\b".format(linha.split('|')[0])
+                    dadovelho = linha.split("|")[0]
+                    dadonovo = input(f'Novo NOME de {linha.split("|")[0]}: ').strip().title()
+                    linha = re.sub(dado, str(dadonovo), linha)
+                    print(f'Nome de [{dadovelho}] alterada para [{dadonovo}]')
+                    conteudo.append(linha)
 
-            # ALTERA A NOTA 01
-            elif dado == "n1":
-                dado = r"\b{}\b".format(linha.split('|')[1])
-                dadovelho = linha.split('|')[1]
-                while True:
-                    try:
-                        dadonovo = float(input(f'Nova NOTA 01 de {linha.split("|")[0]}: ').strip())
-                        break
-                    except ValueError:
-                        print("[ERRO] ENTRADA INVÁLIDA.")
-                linha = re.sub(dado, str(dadonovo), linha)
-                print(f'Nota 01 do aluno [{linha.split("|")[0]}] alterada de [{dadovelho}] para [{dadonovo}]')
-                conteudo.append(linha)
+                # ALTERA A NOTA 01
+                elif dado == "n1":
+                    dado = r"\b{}\b".format(linha.split('|')[1])
+                    dadovelho = linha.split('|')[1]
+                    while True:
+                        try:
+                            dadonovo = float(input(f'Nova NOTA 01 de {linha.split("|")[0]}: ').strip())
+                            break
+                        except ValueError:
+                            print("[ERRO] ENTRADA INVÁLIDA.")
+                    linha = re.sub(dado, str(dadonovo), linha)
+                    print(f'Nota 01 do aluno [{linha.split("|")[0]}] alterada de [{dadovelho}] para [{dadonovo}]')
+                    conteudo.append(linha)
 
-            # ALTERA A NOTA 02
-            elif dado == "n2":
-                dado = r"\b{}\b".format(linha.split('|')[2])
-                dadovelho = linha.split('|')[2]
-                while True:
-                    try:
-                        dadonovo = float(input(f'Nova NOTA 02 de {linha.split("|")[0]}: ').strip())
-                        break
-                    except ValueError:
-                        print("[ERRO] ENTRADA INVÁLIDA.")
-                linha = re.sub(dado, str(dadonovo), linha)
-                print(f'Nota 02 do aluno [{linha.split("|")[0]}] alterada de [{dadovelho}] para [{dadonovo}]')
-                conteudo.append(linha)
+                # ALTERA A NOTA 02
+                elif dado == "n2":
+                    dado = r"\b{}\b".format(linha.split('|')[2])
+                    dadovelho = linha.split('|')[2]
+                    while True:
+                        try:
+                            dadonovo = float(input(f'Nova NOTA 02 de {linha.split("|")[0]}: ').strip())
+                            break
+                        except ValueError:
+                            print("[ERRO] ENTRADA INVÁLIDA.")
+                    linha = re.sub(dado, str(dadonovo), linha)
+                    print(f'Nota 02 do aluno [{linha.split("|")[0]}] alterada de [{dadovelho}] para [{dadonovo}]')
+                    conteudo.append(linha)
 
-            # ALTERA A QTD DE FALTAS
-            elif dado == "faltas":
-                dado = r"\b{}\b".format(linha.split('|')[3])
-                dadovelho = linha.split('|')[3]
-                while True:
-                    try:
-                        dadonovo = int(input(f'Nova quantidade de faltas de {linha.split("|")[0]}: ').strip())
-                        break
-                    except ValueError:
-                        print("[ERRO] ENTRADA INVÁLIDA.")
-                linha = re.sub(dado, str(dadonovo), linha)
-                print(f'Faltas do aluno [{linha.split("|")[0]}] alterada de [{dadovelho}] para [{dadonovo}]')
+                # ALTERA A QTD DE FALTAS
+                elif dado == "faltas":
+                    dado = r"\b{}\b".format(linha.split('|')[3])
+                    dadovelho = linha.split('|')[3]
+                    while True:
+                        try:
+                            dadonovo = int(input(f'Nova quantidade de faltas de {linha.split("|")[0]}: ').strip())
+                            break
+                        except ValueError:
+                            print("[ERRO] ENTRADA INVÁLIDA.")
+                    linha = re.sub(dado, str(dadonovo), linha)
+                    print(f'Faltas do aluno [{linha.split("|")[0]}] alterada de [{dadovelho}] para [{dadonovo}]')
+                    conteudo.append(linha)
+            else:
                 conteudo.append(linha)
+        arquivo.close()
+        arquivo = open("./database/" + db, "w", encoding="UTF-8")
+        arquivo.writelines(conteudo)
+        arquivo.close()
+        if achou == 0:
+            print("Aluno não encontrado.\nBase de dados não atualizada.")
         else:
-            conteudo.append(linha)
-    arquivo.close()
-    arquivo = open("./database/" + db, "w", encoding="UTF-8")
-    arquivo.writelines(conteudo)
-    arquivo.close()
-    if achou == 0:
-        print("Aluno não encontrado.\nBase de dados não atualizada.")
-    else:
-        print("Base de dados atualizada.")
-    analisar(db)
+            print("Base de dados atualizada.")
+        analisar(db)
 
 
 # Analisa uma base de dados e gera um arquivo html contendo as informações de cada aluno e estatísticas gerais da turma
 def analisar(db):
+    checkanalisesdir()
     arquivo = open("./database/" + db, "r", encoding="UTF-8")
     conteudo = []
     for line in arquivo:
@@ -381,6 +401,7 @@ def estaticasdaturma():
 
 def listaranalise():
     arquivosanalise = {}
+    checkanalisesdir()
     files = os.listdir("./analises")
     for f in range(len(files)):
         arquivosanalise[f+1] = files[f]
@@ -402,8 +423,9 @@ def exibiranalises():
         for k, v in arquivosanalise.items():
             print(f"{k} -> {v}")
     print("=" * 40)
-    arq = input("Selecione o arquivo a ser exibido: ").strip()
-    while not arq.isnumeric():
+    if len(arquivosanalise) != 0:
         arq = input("Selecione o arquivo a ser exibido: ").strip()
-    arquivo = "./analises/" + arquivosanalise[int(arq)]
-    webbrowser.open(os.path.abspath(arquivo))
+        while not arq.isnumeric():
+            arq = input("Selecione o arquivo a ser exibido: ").strip()
+        arquivo = "./analises/" + arquivosanalise[int(arq)]
+        webbrowser.open(os.path.abspath(arquivo))
