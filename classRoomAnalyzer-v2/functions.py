@@ -4,9 +4,6 @@ from random import random, randint
 import webbrowser
 
 
-
-
-
 class Aluno:
     def __init__(self, nome, n1, n2, faltas):
         self.nome = str(nome).strip().title()
@@ -17,22 +14,35 @@ class Aluno:
 
 # Verifica se o diretório "./database" existe, caso contrário, cria esse diretório.
 def checkdatabasedir():
+    """
+    Verify if the folder 'database' exists. If not, it is created.
+    :return: [NO RETURN]
+    """
     try:
-        database = os.listdir("./database")
+        os.listdir("./database")
     except FileNotFoundError:
         os.makedirs("./database")
 
 
 # Verifica se o diretório "./analises" existe, caso contrário, cria esse diretório.
 def checkanalisesdir():
+    """
+    Verify if the folder 'analises' exists. If not, it is created.
+    :return: [NO RETURN]
+    """
     try:
-        database = os.listdir("./analises")
+        os.listdir("./analises")
     except FileNotFoundError:
         os.makedirs("./analises")
 
 
 # Verifica se o número informado pode ser convertido para ponto flutuante
 def isfloat(n):
+    """
+    Verify if the parameter can be converted to a float number.
+    :param n: [string] A string to be verified.
+    :return: [boolean] Returns 'true' if the string can be converted to float, otherwise returns 'falses'.
+    """
     try:
         float(n)
         return True
@@ -42,6 +52,11 @@ def isfloat(n):
 
 # Retorna um dicionário com os arquivos da pasta 'database'
 def listardb():
+    """
+    Creates a dictionary containing the files in the 'database' folder.
+    Must be used in conjunction with the 'exibirdb' function. The keys are integers beginning with 1.
+    :return: [dictionary] A dictionary with files in 'database' folder.
+    """
     arquivosdb = {}
     checkdatabasedir()
     files = os.listdir("./database")
@@ -52,6 +67,10 @@ def listardb():
 
 # Exibe os arquivos database contidos na pasta
 def exibirdb():
+    """
+    Prints the files in the 'database' folder with their respective keys.
+    :return: [NO RETURN]
+    """
     arquivosdb = listardb()
     print("=" * 40)
     if len(arquivosdb) == 0:
@@ -69,6 +88,16 @@ def exibirdb():
 
 # Gerar um arquivo database com dados aleatórios
 def turmaaleatoria():
+    """
+    Creates a new database file. The user enter the file name and how many students to create.
+    The students datas are created randomly:
+    i) name - string,
+    ii) score 1 - float number, with two decimals points,
+    iii) score 1 - float number, with two decimals points,
+    iv) number os absenses - interger number, between 0 and 13.
+    At the end, the created database file is analyzed.
+    :return: [NO RETURN]
+    """
     nome = input("Informe o nome do arquivo database a ser criado: ").strip().lower()
     qtd = input("Informe a quantidade de alunos: ").strip()
     while not qtd.isnumeric():
@@ -77,7 +106,7 @@ def turmaaleatoria():
     nomedb = nome
     arquivo = open("./database/" + nomedb, 'w', encoding="UTF-8")
     for x in range(1, int(qtd) + 1):
-        aluno = Aluno(("Aluno_" + str(x)).title(), round(random() * 10, 2), round(random() * 10, 2), randint(1, 15))
+        aluno = Aluno(("Aluno_" + str(x)).title(), round(random() * 10, 2), round(random() * 10, 2), randint(0, 13))
         arquivo.write(f"{aluno.nome}|{aluno.n1}|{aluno.n2}|{aluno.faltas}|\n")
     arquivo.close()
     print(f"Criado o arquivo database [{nomedb}] com {qtd} alunos.")
@@ -86,6 +115,12 @@ def turmaaleatoria():
 
 # Insere um novo aluno personalizado em uma database escolhida
 def criaraluno():
+    """
+    Creates a student record. Firs, the user choose create or update a database file.
+    After that, the user informs the name, score 1, score 2 and number of absences.
+    At the end, the database file (created or updated) is analyzed.
+    :return: [NO RETURN]
+    """
     print("=" * 40)
     resp = input("CRIAR NOVA DATA BASE? [S/N]: ").strip().lower()[0]
     while resp not in 'sn':
@@ -128,6 +163,13 @@ def criaraluno():
 
 # Altera os dados de um aluno específico da database escolhida
 def alterarbasedados():
+    """
+    Updates a database file. The user can chose which file want to change.
+    After, informs the name of student and the data to change.
+    If the student is not found at database, it is printed on screen.
+    Other wise, is printed the changes made and the updated database is analyzed.
+    :return: [NO RETURN]
+    """
     exibirdb()
     listasdb = listardb()
     if len(listasdb) != 0:
@@ -231,8 +273,14 @@ def alterarbasedados():
 
 # Analisa uma base de dados e gera um arquivo html contendo as informações de cada aluno e estatísticas gerais da turma
 def analisar(db):
-    notasTurma = []
-    situacaoTurma = []
+    """
+    Analyzes a database file, creating an html file with the analyzed data.
+    Invokes the 'htmlinicio' function to print the beginning of the file.
+    :param db: [string] A string with the nome of database file.
+    :return: [NO RETURN]
+    """
+    notasturma = []
+    situacaoturma = []
     checkanalisesdir()
     arquivo = open("./database/" + db, "r", encoding="UTF-8")
     conteudo = []
@@ -244,8 +292,8 @@ def analisar(db):
             n2 = float(linhas[2].strip())
             faltas = int(linhas[3].strip())
             resultado = situacaoaluno(n1, n2, faltas)
-            notasTurma.append(resultado[0])
-            situacaoTurma.append(resultado[1])
+            notasturma.append(resultado[0])
+            situacaoturma.append(resultado[1])
             conteudo.append(f"""<tr>
                 <td>{nome}</td>
                 <td>{n1}</td>
@@ -254,7 +302,7 @@ def analisar(db):
                 <td>{resultado[0]}</td>
                 <td>{resultado[1]}</td>
             </tr>""")
-    estaticaturma = estaticasdaturma(notasTurma, situacaoTurma)
+    estaticaturma = estaticasdaturma(notasturma, situacaoturma)
     arquivo.close()
     arquivo = open("./analises/" + db + ".html", "w", encoding="UTF-8")
     htmlinicio(arquivo)
@@ -294,6 +342,11 @@ def analisar(db):
 
 # Cabeçalho do arquivo html
 def htmlinicio(arquivo):
+    """
+    Print the beginning of the html text of each analysis file.
+    :param arquivo: [object] A file object created in writing mode.
+    :return: [NO RETURN]
+    """
     arquivo.write(f"""<!DOCTYPE html>
         <html lang="pt-br">
           <head>
@@ -369,7 +422,17 @@ def htmlinicio(arquivo):
 
 # Examina a situação de um aluno com base em duas notas e quantidade de faltas
 def situacaoaluno(nota1, nota2, faltas):
-
+    """
+    Analyzes the situation of each student based on the score 1, score 2 and number of absences.
+    i) More than 10 absences the student is automatically disapproved, regardless of his grades.
+    ii) Average below 5 - disapproved.
+    iIi) Average between 5 and 7 - in recovery.
+    iv) Average above 7 - approved.
+    :param nota1: [float] A float number representing the score 1.
+    :param nota2: [float] A float number representing the score 2.
+    :param faltas: [interger] [float] A interger number representing the number of absences.
+    :return: [tuple] A tuple with the average and student situation.
+    """
     media = round((nota1 + nota2) / 2, 2)
     if faltas >= 10:
         situacao = "Reprovado por falta"
@@ -383,27 +446,34 @@ def situacaoaluno(nota1, nota2, faltas):
 
 
 # Analisa as estatísticas da turma
-def estaticasdaturma(notasTurma, situacaoTurma):
+def estaticasdaturma(notasturma, situacaoturma):
     """
-    Manipula as listas de escopo global [notasTurma] e [situacaoTurma].
-    Analisa a situação geral da turma. Calculando a média geral, quantidade de alunos acima da média
-    e a quantidade de alunos em cada situação.
-    :return: 06 variáveis correspondentes a média da classe, quantidade de alunos acima da média,
-    quantidade de alunos aprovados, reprovados, em recuperação e reprovados por falta.
+    Calculate class statistics by providing the average class score, number of students above average,
+    and number of students in each situation (approved, recovered, failed, failed due to absence).
+    :param notasturma: [array] A array of each student's score.
+    :param situacaoturma: [array] A array of each student's situation.
+    :return: [tuple] A tuple with average class score, number of students above average,
+    number of students approved, number of students recovered, number of students failed,
+    number of students failed due to absence.
     """
-    media = round(sum(notasTurma) / len(notasTurma), 2)
+    media = round(sum(notasturma) / len(notasturma), 2)
     qtdacimamedia = 0
-    for n in notasTurma:
+    for n in notasturma:
         if n >= media:
             qtdacimamedia += 1
-    qtdaprovados = situacaoTurma.count('Aprovado')
-    qtdreprovados = situacaoTurma.count('Reprovado')
-    qtdrecuperacao = situacaoTurma.count('Recuperação')
-    qtdreprovfaltas = situacaoTurma.count('Reprovado por falta')
+    qtdaprovados = situacaoturma.count('Aprovado')
+    qtdreprovados = situacaoturma.count('Reprovado')
+    qtdrecuperacao = situacaoturma.count('Recuperação')
+    qtdreprovfaltas = situacaoturma.count('Reprovado por falta')
     return media, qtdacimamedia, qtdaprovados, qtdreprovados, qtdrecuperacao, qtdreprovfaltas
 
 
 def listaranalise():
+    """
+    Creates a dictionary containing the files in the 'analises' folder.
+    Must be used in conjunction with the 'exibiranalises' function. The keys are integers beginning with 1.
+    :return: [dictionary] A dictionary with files in 'analises' folder.
+    """
     arquivosanalise = {}
     checkanalisesdir()
     files = os.listdir("./analises")
@@ -414,6 +484,11 @@ def listaranalise():
 
 # Exibe os arquivos database contidos na pasta
 def exibiranalises():
+    """
+    Prints the files in the 'analises' folder with their respective keys.
+    If a file is found, the user can choose which file to open.
+    :return: [NO RETURN]
+    """
     arquivosanalise = listaranalise()
     print("=" * 40)
     if len(arquivosanalise) == 0:
