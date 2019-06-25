@@ -6,6 +6,8 @@ dist
 build
 usingFlask
 usingFlask/
+database/
+analises/
 *.txt
 *.html
 *.spec

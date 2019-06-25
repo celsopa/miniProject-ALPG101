@@ -10,8 +10,9 @@ while True:
     [ 2 ] Gerar turma aleatória.
     [ 3 ] Cadastrar novo aluno.
     [ 4 ] Atualizar base de dados.
-    [ 5 ] Exibir arquivos ANALISE.
-    [ 6 ] ENCERRAR APLICAÇÃO.""")
+    [ 5 ] Analisar base de dados.
+    [ 6 ] Exibir arquivos ANALISE.
+    [ 7 ] ENCERRAR APLICAÇÃO.""")
     print("=" * 40)
     opcao = input("Informe sua opção: ")
     if opcao == "1":
@@ -23,8 +24,19 @@ while True:
     elif opcao == "4":
         alterarbasedados()
     elif opcao == "5":
-        exibiranalises()
+        exibirdb()
+        listasdb = listardb()
+        if len(listasdb) != 0:
+            db = input("Informe a database que deseja analisar: ")
+            while (not db.isnumeric()) or (int(db) <= 0) or (int(db) > len(listasdb)):
+                print("[ERRO] ENTRADA INVÁLIDA.")
+                db = input("Informe a database que deseja analisar: ")
+            db = int(db)
+            db = listasdb[db]
+            analisar(db)
     elif opcao == "6":
+        exibiranalises()
+    elif opcao == "7":
         print("Aplicação encerrada...")
         system("PAUSE")
         break

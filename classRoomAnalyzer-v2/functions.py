@@ -3,8 +3,8 @@ import re
 from random import random, randint
 import webbrowser
 
-notasTurma = []
-situacaoTurma = []
+
+
 
 
 class Aluno:
@@ -231,27 +231,30 @@ def alterarbasedados():
 
 # Analisa uma base de dados e gera um arquivo html contendo as informações de cada aluno e estatísticas gerais da turma
 def analisar(db):
+    notasTurma = []
+    situacaoTurma = []
     checkanalisesdir()
     arquivo = open("./database/" + db, "r", encoding="UTF-8")
     conteudo = []
     for line in arquivo:
-        linhas = line.split('|')
-        nome = linhas[0].strip()
-        n1 = float(linhas[1].strip())
-        n2 = float(linhas[2].strip())
-        faltas = int(linhas[3].strip())
-        resultado = situacaoaluno(n1, n2, faltas)
-        notasTurma.append(resultado[0])
-        situacaoTurma.append(resultado[1])
-        conteudo.append(f"""<tr>
-            <td>{nome}</td>
-            <td>{n1}</td>
-            <td>{n2}</td>
-            <td>{faltas}</td>
-            <td>{resultado[0]}</td>
-            <td>{resultado[1]}</td>
-        </tr>""")
-    estaticaturma = estaticasdaturma()
+        if line != "\n":
+            linhas = line.split('|')
+            nome = linhas[0].strip()
+            n1 = float(linhas[1].strip())
+            n2 = float(linhas[2].strip())
+            faltas = int(linhas[3].strip())
+            resultado = situacaoaluno(n1, n2, faltas)
+            notasTurma.append(resultado[0])
+            situacaoTurma.append(resultado[1])
+            conteudo.append(f"""<tr>
+                <td>{nome}</td>
+                <td>{n1}</td>
+                <td>{n2}</td>
+                <td>{faltas}</td>
+                <td>{resultado[0]}</td>
+                <td>{resultado[1]}</td>
+            </tr>""")
+    estaticaturma = estaticasdaturma(notasTurma, situacaoTurma)
     arquivo.close()
     arquivo = open("./analises/" + db + ".html", "w", encoding="UTF-8")
     htmlinicio(arquivo)
@@ -366,6 +369,7 @@ def htmlinicio(arquivo):
 
 # Examina a situação de um aluno com base em duas notas e quantidade de faltas
 def situacaoaluno(nota1, nota2, faltas):
+
     media = round((nota1 + nota2) / 2, 2)
     if faltas >= 10:
         situacao = "Reprovado por falta"
@@ -379,7 +383,7 @@ def situacaoaluno(nota1, nota2, faltas):
 
 
 # Analisa as estatísticas da turma
-def estaticasdaturma():
+def estaticasdaturma(notasTurma, situacaoTurma):
     """
     Manipula as listas de escopo global [notasTurma] e [situacaoTurma].
     Analisa a situação geral da turma. Calculando a média geral, quantidade de alunos acima da média
