@@ -98,6 +98,7 @@ def turmaaleatoria():
     At the end, the created database file is analyzed.
     :return: [NO RETURN]
     """
+    checkdatabasedir()
     nome = input("Informe o nome do arquivo database a ser criado: ").strip().lower()
     qtd = input("Informe a quantidade de alunos: ").strip()
     while not qtd.isnumeric():
