@@ -85,12 +85,7 @@ def exibirdb():
         for k, v in arquivosdb.items():
             print(f"{k} \u2192 {v}")
     print("=" * 40)
-    if len(arquivosdb) != 0:
-        arq = input("Selecione o arquivo a ser exibido: ").strip()
-        while not arq.isnumeric():
-            arq = input("Selecione o arquivo a ser exibido: ").strip()
-        arquivo = "./database/" + arquivosdb[int(arq)]
-        webbrowser.open(os.path.abspath(arquivo))
+
 
 
 # Gerar um arquivo database com dados aleatórios
@@ -112,7 +107,7 @@ def turmaaleatoria():
         print("[ERRO] Informe um valor número válido")
         qtd = input("Informe a quantidade de alunos: ").strip()
     nomedb = nome
-    arquivo = open("./database/" + nomedb+".txt", 'w', encoding="UTF-8")
+    arquivo = open("./database/" + nomedb, 'w', encoding="UTF-8")
     for x in range(1, int(qtd) + 1):
         aluno = Aluno(("Aluno_" + str(x)).title(), round(random() * 10, 2), round(random() * 10, 2), randint(0, 13))
         arquivo.write(f"{aluno.nome}|{aluno.n1}|{aluno.n2}|{aluno.faltas}|\n")
@@ -290,7 +285,7 @@ def analisar(db):
     notasturma = []
     situacaoturma = []
     checkanalisesdir()
-    arquivo = open("./database/" + db+".txt", "r", encoding="UTF-8")
+    arquivo = open("./database/" + db, "r", encoding="UTF-8")
     conteudo = []
     for line in arquivo:
         if line != "\n":

@@ -1,5 +1,5 @@
 from functions import *
-from os import system
+from os import system, path
 
 
 while True:
@@ -17,6 +17,14 @@ while True:
     opcao = input("Informe sua opção: ")
     if opcao == "1":
         exibirdb()
+        arquivosdb = listardb()
+        if len(arquivosdb) != 0:
+            arq = input("Selecione o arquivo a ser exibido: ").strip()
+            while not arq.isnumeric():
+                arq = input("Selecione o arquivo a ser exibido: ").strip()
+            arquivo = "./database/" + arquivosdb[int(arq)]
+            webbrowser.open(path.abspath(arquivo))
+            # system(f"notepad {path.abspath(arquivo)}")
     elif opcao == "2":
         turmaaleatoria()
     elif opcao == "3":
