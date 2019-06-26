@@ -23,7 +23,9 @@ while True:
             while not arq.isnumeric():
                 arq = input("Selecione o arquivo a ser exibido: ").strip()
             arquivo = "./database/" + arquivosdb[int(arq)]
-            webbrowser.open(path.abspath(arquivo))
+            chrome_path = "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe"
+            webbrowser.register('chrome', None, webbrowser.BackgroundBrowser(chrome_path))
+            webbrowser.get('chrome').open(path.abspath(arquivo))
             # system(f"notepad {path.abspath(arquivo)}")
     elif opcao == "2":
         turmaaleatoria()

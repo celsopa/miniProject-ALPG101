@@ -124,22 +124,27 @@ def criaraluno():
     At the end, the database file (created or updated) is analyzed.
     :return: [NO RETURN]
     """
-    print("=" * 40)
-    resp = input("CRIAR NOVA DATA BASE? [S/N]: ").strip().lower()[0]
-    while resp not in 'sn':
-        resp = input("CRIAR NOVA DATA BASE? [S/N]: ").strip().lower()[0]
-    if resp == "s":
-        db = input("Nome da nova database: ").strip().lower()
-    else:
+
+    listasdb = listardb()
+    if len(listasdb) > 0:
         print("=" * 40)
-        exibirdb()
-        listasdb = listardb()
-        db = input("Informe a database que deseja alterar: ")
-        while (not db.isnumeric()) or (int(db) <= 0) or (int(db) > len(listasdb)):
-            print("[ERRO] ENTRADA INVÁLIDA.")
+        resp = input("CRIAR NOVA DATA BASE? [S/N]: ").strip().lower()[0]
+        while resp not in 'sn':
+            resp = input("CRIAR NOVA DATA BASE? [S/N]: ").strip().lower()[0]
+        if resp == "s":
+            db = input("Nome da nova database: ").strip().lower()
+        else:
+            print("=" * 40)
+            exibirdb()
+            listasdb = listardb()
             db = input("Informe a database que deseja alterar: ")
-        db = int(db)
-        db = listasdb[db]
+            while (not db.isnumeric()) or (int(db) <= 0) or (int(db) > len(listasdb)):
+                print("[ERRO] ENTRADA INVÁLIDA.")
+                db = input("Informe a database que deseja alterar: ")
+            db = int(db)
+            db = listasdb[db]
+    else:
+        db = input("Informe o nome do arquivo database a ser criado: ").strip().lower()
     print("=" * 40)
     print(f"{'CRIANDO NOVO ALUNO':^40}")
     print("=" * 40)
